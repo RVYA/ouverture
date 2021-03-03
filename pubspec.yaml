@@ -1,0 +1,149 @@
+name: ouverture
+description: Private access, only when you want.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.0
+  equatable: ^1.2.5
+
+  #   : BLoC
+  bloc: ^6.1.1
+  flutter_bloc: ^6.1.1
+  #end: BLoC
+
+  #   : Country Codes
+  country_codes:
+    git:
+      url: git://github.com/RVYA/country_codes
+      ref: master
+  #end: Country Codes
+
+  #   : Flutter-Firebase
+  firebase_core: ^0.7.0
+  cloud_firestore: ^0.16.0
+  firebase_analytics: ^7.0.1
+  firebase_auth: ^0.20.0
+  #end: Flutter-Firebase
+
+  #   : Hive
+  hive: ^1.4.4+1
+  hive_flutter: ^0.3.1
+  #end: Hive
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+
+  assets:
+    - assets/images/tiger_closeup.png
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/raleway/Raleway-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/raleway/Raleway-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-Light.ttf
+          weight: 300
+        - asset: assets/fonts/raleway/Raleway-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/raleway/Raleway-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/raleway/Raleway-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/raleway/Raleway-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/raleway/Raleway-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/raleway/Raleway-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/raleway/Raleway-Black.ttf
+          weight: 900
+        - asset: assets/fonts/raleway/Raleway-BlackItalic.ttf
+          weight: 900
+          style: italic
+    
+    - family: Red Hat Display
+      fonts:
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-Black.ttf
+          weight: 900
+        - asset: assets/fonts/red_hat_display/RedHatDisplay-BlackItalic.ttf
+          weight: 900
+          style: italic

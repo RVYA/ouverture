@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "144812942341",
+    "project_id": "ouverture-683e8",
+    "storage_bucket": "ouverture-683e8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144812942341:android:3cf0f54a621ea51894686c",
+        "android_client_info": {
+          "package_name": "com.ymc.ouverture"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144812942341-i082qsg46ntb9qbbu6pddl34df1i5bs3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ymc.ouverture",
+            "certificate_hash": "dd627d28e70e28282e2d485842ef3390db315064"
+          }
+        },
+        {
+          "client_id": "144812942341-a7ce6jvgdr6u9j21hocvh46j8drcj4sn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKmYAhU5VTDIDat5bugQMc7FFaxU-fn9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144812942341-a7ce6jvgdr6u9j21hocvh46j8drcj4sn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
