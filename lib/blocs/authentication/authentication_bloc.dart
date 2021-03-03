@@ -3,15 +3,20 @@ import 'package:flutter/foundation.dart' show required;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:ouverture/repositories/user_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
+import 'package:flutter/material.dart';
 
 import '../../data/user_cache.dart';
 import '../../models/user.dart';
 import '../../repositories/authentication_repository.dart';
+import '../../repositories/user_repository.dart';
 
 
 part 'authentication_state.dart';
 part 'authentication_event.dart';
+
+
+const Duration kAuthenticationTimeoutDuration = const Duration(minutes: 1);
 
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -45,7 +50,19 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       } break;
 
       case AuthenticationEventType.signInRequested: {
-        // TODO: Handle this case.
+        // TODO: Implement event system or add new states and events to Auth.
+        yield AuthenticationSignInInProgress();
+
+        await authRepository.verifyPhoneNumber(
+            event.phoneNumber,
+            onCodeAutoRetrievalTimeout: (_) {}, // Only be called on Android devices which support automatic SMS code resolution
+            onCodeSent: null,
+            onVerificationCompleted: (_){}, // Only be called on Android devices which support automatic SMS code resolution
+            onVerificationFailed: (FirebaseAuthException exception) {
+              print(exception.toString());
+            },
+            timeoutDuration: kAuthenticationTimeoutDuration,
+          );
       } break;
 
       case AuthenticationEventType.signOutRequested: {

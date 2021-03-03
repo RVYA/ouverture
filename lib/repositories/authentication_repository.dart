@@ -15,43 +15,20 @@ class AuthenticationRepository {
   User get currentUser => _auth.currentUser;
 
 
-  Future<void> signInWithPhoneNumber(
-    String phoneNumber,{
-    @required void Function(String verificationID) onCodeAutoRetrievalTimeout,
-    @required void Function(String verificationID, int foreceResendingToken) onCodeSent,
-    @required void Function(UserCredential) onVerificationCompleted,
-    @required void Function(FirebaseAuthException) onVerificationFailed,
-    Duration timeoutDuration,
-  }) {
-    return
-      _verifyPhoneNumber( phoneNumber,
-        onCodeAutoRetrievalTimeout: onCodeAutoRetrievalTimeout,
-        onCodeSent                : onCodeSent,
-        onVerificationCompleted   : (AuthCredential authCredential) async {
-          onVerificationCompleted(await _signIn(authCredential: authCredential));
-        },
-        onVerificationFailed: onVerificationFailed,
-        timeoutDuration: timeoutDuration,
-      );
+  Future<UserCredential> signIn({@required AuthCredential authCredential,}) {
+    return _auth.signInWithCredential(authCredential);
   }
 
   Future<void> signOut() => _auth.signOut();
 
-  Future<UserCredential> _signIn({
-    @required AuthCredential authCredential,
-  }) async {
-    return
-      await _auth.signInWithCredential(authCredential);
-  }
-
-  Future<void> _verifyPhoneNumber(
+  Future<void> verifyPhoneNumber(
     phoneNumber, {
     //@required BuildContext context, // ???
     @required void Function(String verificationID) onCodeAutoRetrievalTimeout,
     @required void Function(String verificationID, int forceResendingToken) onCodeSent,
     @required void Function(PhoneAuthCredential) onVerificationCompleted,
     @required void Function(FirebaseAuthException) onVerificationFailed,
-    Duration timeoutDuration = const Duration(minutes: 1),
+    @required Duration timeoutDuration,
   }) {
     return
       _auth.verifyPhoneNumber(
