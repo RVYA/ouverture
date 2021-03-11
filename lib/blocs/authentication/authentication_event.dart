@@ -4,6 +4,7 @@ part of 'authentication_bloc.dart';
 enum AuthenticationEventType {
   appInitialized,
   signInRequested,
+  smsCodeEntered,
   signOutRequested,
   signUpRequested,
   userReturned,
@@ -13,18 +14,14 @@ enum AuthenticationEventType {
 class AuthenticationEvent extends Equatable {
   const AuthenticationEvent({
     @required this.type,
-    @required this.phoneNumber,
+    @required this.data,
   })
-    : assert(
-        phoneNumber != null,
-        "Phone number is used for authentication; "
-          "therefore, it should be specified.",
-      );
+    : assert(data != null,);
 
   final AuthenticationEventType type;
-  final String phoneNumber;
+  final String data;
   
   
   @override
-  List<Object> get props => <Object>[ this.type, this.phoneNumber, ];
+  List<Object> get props => <Object>[ this.type, this.data, ];
 }

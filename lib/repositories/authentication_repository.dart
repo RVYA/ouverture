@@ -15,6 +15,17 @@ class AuthenticationRepository {
   User get currentUser => _auth.currentUser;
 
 
+  PhoneAuthCredential generatePhoneAuthCredential({
+    @required String smsCode,
+    @required String verificationId,
+  }) {
+    return
+      PhoneAuthProvider.credential(
+        smsCode: smsCode,
+        verificationId: verificationId
+      );
+  }
+
   Future<UserCredential> signIn({@required AuthCredential authCredential,}) {
     return _auth.signInWithCredential(authCredential);
   }

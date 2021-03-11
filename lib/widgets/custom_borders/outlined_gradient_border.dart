@@ -4,10 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart' show objectRuntimeType;
 import 'package:flutter/material.dart';
 
-
-const Radius
-  kMaterialSmallComponentRadii = const Radius.circular(4.0),  //dp
-  kMaterialLargeComponentRadii = const Radius.circular(24.0); //dp
+import '../../values/decorations.dart' show kMaterialSmallComponentRadii;
 
 
 class OutlinedGradientBorder extends OutlinedBorder {

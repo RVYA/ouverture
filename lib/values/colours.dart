@@ -4,7 +4,7 @@ import 'package:flutter/material.dart' show Alignment, Color, LinearGradient;
 const Color
   kPrimary          = _kBlack;                  // Black
 const LinearGradient
-  kSecondary        = _kVelvetGradient;
+  kSecondary        = _kVelvetGradient; // TODO: Decide on a secondary color.
 const Color
   kBackground       = _kWhite,                  // Light Grey
   kSurface          = _kWhite,                  // Light Grey

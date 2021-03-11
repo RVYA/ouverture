@@ -52,6 +52,31 @@ class AuthenticationSignInSuccessful extends AuthenticationState {
 }
 
 
+class AuthenticationPhoneNumberVerificationInProgress extends AuthenticationState {
+  const AuthenticationPhoneNumberVerificationInProgress()
+    : super(
+        status: AuthenticationStatus.unauthenticated,
+        user: User.unknown,
+      );
+}
+
+class AuthenticationPhoneNumberVerificationSuccessful extends AuthenticationState {
+  const AuthenticationPhoneNumberVerificationSuccessful()
+    : super(
+        status: AuthenticationStatus.authenticated,
+        user: User.unknown,
+      ); 
+}
+
+class AuthenticationPhoneNumberVerificationFailure extends AuthenticationState {
+  const AuthenticationPhoneNumberVerificationFailure()
+    : super(
+        status: AuthenticationStatus.unauthenticated,
+        user: User.unknown,
+      );
+}
+
+
 class AuthenticationSignUpFailure extends AuthenticationState {
   const AuthenticationSignUpFailure()
     : super(

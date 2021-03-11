@@ -3,8 +3,7 @@ import 'package:flutter/foundation.dart' show required;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException, PhoneAuthCredential, UserCredential;
 
 import '../../data/user_cache.dart';
 import '../../models/user.dart';
@@ -31,8 +30,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   final UserCache userCache;
   final UserRepository userRepository;
 
+  String _verificationId = kUnknown;
 
-  // TODO(me): Refactor to use an ID for users instead of phone number.
+
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     switch (event.type) {
@@ -41,7 +41,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           this.add(
             AuthenticationEvent(
               type: AuthenticationEventType.userReturned,
-              phoneNumber: authRepository.currentUser.phoneNumber,
+              data: authRepository.currentUser.phoneNumber,
             ),
           );
         } else {
@@ -50,19 +50,39 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       } break;
 
       case AuthenticationEventType.signInRequested: {
-        // TODO: Implement event system or add new states and events to Auth.
         yield AuthenticationSignInInProgress();
 
+        // TODO: Implement empty callback related to automatic SMS code resolution.
         await authRepository.verifyPhoneNumber(
-            event.phoneNumber,
+            event.data,
             onCodeAutoRetrievalTimeout: (_) {}, // Only be called on Android devices which support automatic SMS code resolution
-            onCodeSent: null,
-            onVerificationCompleted: (_){}, // Only be called on Android devices which support automatic SMS code resolution
+            onCodeSent: (String verificationId, int resendToken) {
+              _verificationId = verificationId;
+            },
+            onVerificationCompleted: (_) {}, // Only be called on Android devices which support automatic SMS code resolution
             onVerificationFailed: (FirebaseAuthException exception) {
               print(exception.toString());
             },
             timeoutDuration: kAuthenticationTimeoutDuration,
           );
+
+        yield AuthenticationPhoneNumberVerificationInProgress();
+      } break;
+
+      case AuthenticationEventType.smsCodeEntered: {
+        final PhoneAuthCredential phoneAuthCredential =
+            authRepository.generatePhoneAuthCredential(
+              smsCode: event.data,
+              verificationId: _verificationId,
+            );
+        final UserCredential userCredential =
+            await authRepository.signIn(authCredential: phoneAuthCredential);
+        
+        // TODO: Remove after testing.
+        print("UID: ${userCredential.user.uid}, Phone Number: ${userCredential.user.phoneNumber}");
+        print("Token: ${userCredential.credential.token}");
+
+        // TODO: Continue implementing Sign-In flow.
       } break;
 
       case AuthenticationEventType.signOutRequested: {

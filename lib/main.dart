@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:country_codes/country_codes.dart';
 
 import 'values/routes.dart';
+import 'screens/introduction/introduction.dart';
 
 
 void main() async {
@@ -14,7 +15,6 @@ void main() async {
       DeviceOrientation.portraitDown, DeviceOrientation.portraitUp,
     ],
   );
-
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
   await CountryCodes.initialize();
@@ -32,8 +32,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         splashFactory: InkRipple.splashFactory,
       ),
-      initialRoute: kWelcomeRoute,
-      routes: kRoutesMap,
+      home: Introduction(),
+      /*initialRoute: kWelcomeRoute,
+      routes: kRoutesMap,*/
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart' show TextInputFormatter, FilteringTextInp
 import 'package:country_codes/country_codes.dart';
 
 import 'package:ouverture/values/colours.dart';
-import 'package:ouverture/values/interaction_styles.dart';
+import 'package:ouverture/values/decorations.dart';
 import 'package:ouverture/values/strings.dart';
 import 'package:ouverture/values/text_styles.dart';
 import 'package:ouverture/widgets/bottom_dialog/bottom_dialog.dart';
@@ -86,7 +86,7 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
         : Padding(
             key: ValueKey<String>("InputFieldKey"),
             padding: _kHorizontalOffset,
-            child: DecoratedBox(
+            child: DecoratedBox(  // TODO: Change shape to StadiumBorder
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50.0),
                 gradient: const LinearGradient(

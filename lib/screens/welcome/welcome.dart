@@ -134,7 +134,6 @@ class _WelcomeState extends State<Welcome> {
                 textDirection: TextDirection.ltr,
                 verticalDirection: VerticalDirection.down,
                 children: <Widget>[
-
                   // Tagline
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),

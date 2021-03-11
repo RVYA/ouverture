@@ -41,5 +41,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library will be accessed to load a photograph for your profile image.</string>
+	<key>NSCameraUsageDescription </key>
+	<string>Camera will be used to take a photograph for your profile image.</string>
+	<key>NSMicrophoneUsageDescription </key>
+	<string>This app will not use microphone for any purpose, it is requested as a part of required permissions.</string>
 </dict>
 </plist>
