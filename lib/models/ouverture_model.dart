@@ -3,11 +3,13 @@ import 'package:flutter/foundation.dart' show required;
 import 'package:equatable/equatable.dart';
 
 
+const String kUnknown = "UNKNOWN";
+
+
 abstract class OuvertureModel extends Equatable {
   const OuvertureModel({
-    @required this.id,
-  })
-    : assert(id != null, "ID can not be NULL.");
+    required this.id,
+  });
 
   final String id;
 

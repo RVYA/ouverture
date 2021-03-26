@@ -12,21 +12,21 @@ class AuthenticationRepository {
 
   final FirebaseAuth _auth;
 
-  User get currentUser => _auth.currentUser;
+  User? get currentUser => _auth.currentUser;
 
 
   PhoneAuthCredential generatePhoneAuthCredential({
-    @required String smsCode,
-    @required String verificationId,
+    required String smsCode,
+    required String verificationId,
   }) {
     return
       PhoneAuthProvider.credential(
         smsCode: smsCode,
         verificationId: verificationId
-      );
+      ) as PhoneAuthCredential;
   }
 
-  Future<UserCredential> signIn({@required AuthCredential authCredential,}) {
+  Future<UserCredential> signIn({required AuthCredential authCredential,}) {
     return _auth.signInWithCredential(authCredential);
   }
 
@@ -35,11 +35,11 @@ class AuthenticationRepository {
   Future<void> verifyPhoneNumber(
     phoneNumber, {
     //@required BuildContext context, // ???
-    @required void Function(String verificationID) onCodeAutoRetrievalTimeout,
-    @required void Function(String verificationID, int forceResendingToken) onCodeSent,
-    @required void Function(PhoneAuthCredential) onVerificationCompleted,
-    @required void Function(FirebaseAuthException) onVerificationFailed,
-    @required Duration timeoutDuration,
+    required void Function(String verificationID) onCodeAutoRetrievalTimeout,
+    required void Function(String verificationID, int? forceResendingToken) onCodeSent,
+    required void Function(PhoneAuthCredential) onVerificationCompleted,
+    required void Function(FirebaseAuthException) onVerificationFailed,
+    required Duration timeoutDuration,
   }) {
     return
       _auth.verifyPhoneNumber(

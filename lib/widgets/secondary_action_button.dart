@@ -6,10 +6,12 @@ import '../values/text_styles.dart';
 
 class SecondaryActionButton extends StatelessWidget {
   const SecondaryActionButton({
+    Key? key,
     this.brightness = Brightness.light,
-    @required this.icon,
-    @required this.onPressed,
-  });
+    required this.icon,
+    required this.onPressed,
+  })
+    : super(key: key,);
 
   final Brightness brightness;
   final Icon icon;

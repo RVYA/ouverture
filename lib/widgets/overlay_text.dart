@@ -5,17 +5,17 @@ const double _kTextStructHeightOffset = 1.75; // Depending on the font, letters
                                           // lines can be beneath or above the
                                           // specified baseline.
 
-// TODO: Check the performance of this widget. It may be better to use a CustomPainter.
+// NOTE: Check the performance of this widget. It may be better to use a CustomPainter.
 // But ShaderMask is rendered by CustomPainter too, it may be unnecessary: https://github.com/flutter/flutter/blob/32741c0ec822599c17abd8d80ebeb53c143cc818/packages/flutter/lib/src/rendering/proxy_box.dart
 class OverlayText extends StatelessWidget {
   const OverlayText({
     this.gradient,
     this.imageShader,
-    @required this.padding,
-    @required this.text,
+    required this.padding,
+    required this.text,
     this.textAlignment = Alignment.centerLeft,
     this.textFit = BoxFit.none,
-    @required this.textStyle,
+    required this.textStyle,
   })
     : assert(
         (gradient == null) ^ (imageShader == null),
@@ -26,8 +26,8 @@ class OverlayText extends StatelessWidget {
 
   final TextStyle textStyle;
   final EdgeInsetsGeometry padding;
-  final Gradient gradient;
-  final ImageShader imageShader;
+  final Gradient? gradient;
+  final ImageShader? imageShader;
   final String text;
   final Alignment textAlignment;
   final BoxFit textFit;
@@ -45,7 +45,7 @@ class OverlayText extends StatelessWidget {
             blendMode: BlendMode.modulate,
             shaderCallback: (Rect bounds) {
                 return gradient?.createShader(Offset.zero & bounds.size)
-                        ?? imageShader;
+                        ?? imageShader!;
               },
             child: Text( text,
               //textAlign: textAlignment,

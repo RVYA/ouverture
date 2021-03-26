@@ -12,10 +12,10 @@ const MovementDirection
 
 class Carousel extends StatefulWidget {
   const Carousel({
-    @required this.changeAnimationCurve,
-    @required this.changeAnimationDuration,
-    @required this.children,
-    @required this.childShowcaseDuration,
+    required this.changeAnimationCurve,
+    required this.changeAnimationDuration,
+    required this.children,
+    required this.childShowcaseDuration,
     this.direction = MovementDirection.up,
     this.initialPage = 0,
     this.padding = const EdgeInsets.all(8.0),
@@ -35,9 +35,9 @@ class Carousel extends StatefulWidget {
 
 class _CarouselState extends State<Carousel>
     with SingleTickerProviderStateMixin {
-  PageController controller;
-  AnimationController animController;
-  Animation<double> animation;
+  PageController? controller;
+  AnimationController? animController;
+  Animation<double>? animation;
   int pageIndex = 0;
 
   @override
@@ -54,14 +54,14 @@ class _CarouselState extends State<Carousel>
                       vsync: this,
                      );
     animation = Tween<double>(begin: 0.0, end: childCount.toDouble(),)
-                    .animate(animController)
+                    .animate(animController!)
                     ..addListener(
                       () {
-                        int flooredValue = step(animation.value);
+                        int flooredValue = step(animation!.value);
 
                         if (pageIndex != flooredValue) {
                           pageIndex = flooredValue;
-                          controller.animateToPage(
+                          controller!.animateToPage(
                               pageIndex,
                               curve: widget.changeAnimationCurve,
                               duration: widget.changeAnimationDuration,
@@ -69,13 +69,13 @@ class _CarouselState extends State<Carousel>
                         }
                       }
                     );
-    animController.repeat();
+    animController!.repeat();
   }
 
   @override
   void dispose() {
-    controller.dispose();
-    animController.dispose();
+    animController!.dispose();
+    controller!.dispose();
 
     super.dispose();
   }

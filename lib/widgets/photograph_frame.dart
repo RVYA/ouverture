@@ -10,11 +10,12 @@ const EdgeInsetsGeometry
     _kFramePadding = const EdgeInsets.all(4.0); // Inner
 
 const String _kFrameDefaultPhotographPath = "assets/images/tiger_closeup.png";
+const double _kFrameReferenceRadius = 100;
 
 
 class PhotographFrame extends StatelessWidget {
   const PhotographFrame({
-    Key key,
+    Key? key,
     this.brightness = Brightness.light,
     this.flex = 1,
     this.photograph,
@@ -22,51 +23,25 @@ class PhotographFrame extends StatelessWidget {
   })
     : super(key: key,);
 
-  final Brightness brightness;
+  final Brightness brightness;  // TODO: Implement borders.
   final int flex;
-  final io.File photograph;
+  final io.File? photograph;
   final EdgeInsetsGeometry margin;
 
 
   @override
   Widget build(BuildContext context) {
+    final ImageProvider backgroundImage = (photograph == null)?
+          AssetImage( _kFrameDefaultPhotographPath,)
+          : FileImage( photograph!,) as ImageProvider<Object>;
+
     return Expanded(
       flex: flex,
-      child: Container(
-        alignment: Alignment.center,
-        decoration: kGetBoxDecorationFor(
-          brightness: brightness,
-          isFilled: false,
-          shape: BoxShape.circle,
-        ),
-        margin: margin,
-        padding: _kFramePadding,
-        child: ClipOval(
-          child: (photograph != null)?
-            Image.file( photograph,
-              filterQuality: FilterQuality.high,
-              // TODO: Work on this Image. There may be a need to use a scale.
-            )
-            : Image.asset( _kFrameDefaultPhotographPath,
-                filterQuality: FilterQuality.high,
-              ),
-          clipBehavior: Clip.antiAlias,
-          clipper: _CircleClipper(),
-        ),
+      child: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: _kFrameReferenceRadius,
+        backgroundImage: backgroundImage,
       ),
     );
   }
-}
-
-
-class _CircleClipper extends CustomClipper<Rect> {
-  @override
-  Rect getClip(Size size) {
-    final double diameter = (size.width < size.height)? size.width : size.height;
-
-    return Rect.fromLTWH(0, 0, diameter, diameter);
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Rect> oldClipper) => false;
 }

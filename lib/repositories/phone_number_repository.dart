@@ -8,17 +8,17 @@ import '../helper_classes/couple.dart';
 class UserIsNotRegisteredException implements Exception {
   const UserIsNotRegisteredException({this.message});
 
-  final String message;
+  final String? message;
 
   @override
-  String toString() => message ?? this.runtimeType;
+  String toString() => message ?? "$this.runtimeType";
 }
 
 
 class PhoneNumberRegistry extends Couple<String, String> {
   const PhoneNumberRegistry({
-    @required String phoneNumber,
-    @required String userId,
+    required String phoneNumber,
+    required String userId,
   })
     : super(
         phoneNumber,
@@ -34,11 +34,10 @@ const String _kPhoneNumbersCollection = "phone-numbers";
 const String _kPhoneNumberDocNumberFieldKey = "phoneNumber";
 const String _kPhoneNumberDocIdSalt = "ph0n3nvmb3r";
 
-
 class PhoneNumberRepository {
   PhoneNumberRepository._internal()
     : this._phoneNumbersRef = FirebaseFirestore.instance
-                                               .collection(_kPhoneNumbersCollection);
+                                  .collection(_kPhoneNumbersCollection);
 
   factory PhoneNumberRepository() => _instance;
   static final PhoneNumberRepository _instance = PhoneNumberRepository._internal();
@@ -51,7 +50,7 @@ class PhoneNumberRepository {
   /// recorded in the database. This also means that the phone number is not
   /// used, yet, too.
   ///
-  Future<String> getPhoneNumberOf({@required String userId}) async {
+  Future<String> getPhoneNumberOf({required String userId}) async {
     final DocumentSnapshot phoneNumberDoc =
         await _phoneNumbersRef
                 .doc("$_kPhoneNumbersCollection$_kPhoneNumberDocIdSalt")
@@ -60,7 +59,7 @@ class PhoneNumberRepository {
       throw UserIsNotRegisteredException();
     } else {
       return
-        phoneNumberDoc.data()[_kPhoneNumberDocNumberFieldKey];
+        phoneNumberDoc.data()![_kPhoneNumberDocNumberFieldKey];
     }
   }
 
@@ -71,8 +70,8 @@ class PhoneNumberRepository {
   /// user that is registered with that number.
   ///
   Future<bool> doesPhoneNumberExists({
-    @required String phoneNumber,
-    void Function(PhoneNumberRegistry phoneNumberRegistry) ifExists,
+    required String phoneNumber,
+    void Function(PhoneNumberRegistry phoneNumberRegistry)? ifExists,
   }) async {
     final QuerySnapshot phoneNumberQuery =
         await _phoneNumbersRef.where(
@@ -85,7 +84,7 @@ class PhoneNumberRepository {
       final DocumentSnapshot phoneNumberDoc = phoneNumberQuery.docs.first;
       ifExists(
         PhoneNumberRegistry(
-          phoneNumber: phoneNumberDoc.data()[_kPhoneNumberDocNumberFieldKey],
+          phoneNumber: phoneNumberDoc.data()![_kPhoneNumberDocNumberFieldKey],
           userId: phoneNumberDoc.id.replaceFirst(_kPhoneNumberDocIdSalt, ""),
         )
       );
@@ -102,8 +101,8 @@ class PhoneNumberRepository {
   /// validation must also be done on the input mechanism.
   ///
   Future<void> addPhoneNumber({
-    @required String phoneNumber,
-    @required String userId,
+    required String phoneNumber,
+    required String userId,
   }) async {
     return
       await _phoneNumbersRef.doc("$userId$_kPhoneNumberDocIdSalt")
@@ -119,7 +118,7 @@ class PhoneNumberRepository {
   /// _UserRepository_. If the user is registered, then the associated phone number
   /// document must be deleted.
   ///
-  Future<void> deletePhoneNumber({@required String userId}) {
+  Future<void> deletePhoneNumber({required String userId}) {
     return
       _phoneNumbersRef.doc("$userId$_kPhoneNumberDocIdSalt")
                       .delete();

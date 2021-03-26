@@ -4,38 +4,38 @@ import 'ouverture_model.dart';
 import 'place.dart';
 
 
-const String kUnknown = "UNKNOWN";
-
 const String  // TODO: The phone number may be stored seperately. Must decide the ID system for phone numbers.
   kUserDocKeyForename       = "forename",
   kUserDocKeySurname        = "surname",
-  kUserDocKeyPhotoUrl       = "photographUrl",
   kUserDocKeyCurrentPlaceId = "currentPlaceId";
+
+const String _kPathTigerPhoto = "assets/images/tiger_closeup.png";
+const ImageProvider kDefaultUserPhotograph = const AssetImage(_kPathTigerPhoto);
 
 
 class User extends OuvertureModel {
   const User({
-    @required String id,
-    @required this.forename,
-    @required this.surname,
-    @required this.phoneNumber,
-    @required this.photographUrl,
-    @required this.currentPlace,
+    required String id,
+    required this.forename,
+    required this.surname,
+    required this.phoneNumber,
+    required this.photograph,
+    required this.currentPlace,
   }) : super(id: id);
 
   static const User unknown =
       const User(
-        id           : kUnknown,
-        forename     : kUnknown,
-        surname      : kUnknown,
-        phoneNumber  : kUnknown,
-        photographUrl: kUnknown,
-        currentPlace : null,
+        id          : kUnknown,
+        forename    : kUnknown,
+        surname     : kUnknown,
+        phoneNumber : kUnknown,
+        photograph  : kDefaultUserPhotograph,
+        currentPlace: Place.unknown,
       );
 
   final String forename, surname;
   final String phoneNumber;
-  final String photographUrl;
+  final ImageProvider photograph;
   final Place currentPlace;
 
   @override
@@ -44,26 +44,26 @@ class User extends OuvertureModel {
                                     this.forename,
                                     this.surname,
                                     this.phoneNumber,
-                                    this.photographUrl,
+                                    this.photograph,
                                     this.currentPlace,
                                   ];
 
 
   User copyWith({
-    String id,
-    String forename,
-    String surname,
-    String phoneNumbers,
-    String photographUrl,
-    Place place,
+    String? id,
+    String? forename,
+    String? surname,
+    String? phoneNumber,
+    ImageProvider? photograph,
+    Place? place,
   }) {
     return User(
-      id            : id            ?? this.id,
-      forename      : forename      ?? this.forename,
-      surname       : surname       ?? this.surname,
-      phoneNumber   : phoneNumbers  ?? this.phoneNumber,
-      photographUrl : photographUrl ?? this.photographUrl,
-      currentPlace  : place         ?? this.currentPlace,
+      id          : id          ?? this.id,
+      forename    : forename    ?? this.forename,
+      surname     : surname     ?? this.surname,
+      phoneNumber : phoneNumber ?? this.phoneNumber,
+      photograph  : photograph  ?? this.photograph,
+      currentPlace: place       ?? this.currentPlace,
     );
   }
 
@@ -73,7 +73,6 @@ class User extends OuvertureModel {
       <String, dynamic>{
         kUserDocKeyForename      : forename,
         kUserDocKeySurname       : surname,
-        kUserDocKeyPhotoUrl      : photographUrl,
         kUserDocKeyCurrentPlaceId: currentPlace.id,
       };
   }

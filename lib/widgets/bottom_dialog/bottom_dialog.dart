@@ -25,21 +25,21 @@ const BoxBorder
 /// 
 class BottomDialog extends StatelessWidget {
   const BottomDialog._({
-    @required this.child,
+    required this.child,
     this.innerPadding = const EdgeInsets.all(8.0),
-    @required this.title,
+    required this.title,
   });
 
   final Widget child;
-  final EdgeInsetsGeometry innerPadding;
+  final EdgeInsetsGeometry? innerPadding;
   final String title;
 
 
-  static Future<T> showBottomDialog<T>(
+  static Future<T?> showBottomDialog<T>(
     BuildContext buildContext, {
-    @required Widget child,
-    EdgeInsetsGeometry innerPadding,
-    @required String title,
+    required Widget child,
+    EdgeInsetsGeometry? innerPadding,
+    required String title,
   }) {
     return showModalBottomSheet<T>(
       context: buildContext,

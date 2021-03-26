@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart' show required;
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/member.dart';
@@ -11,19 +9,19 @@ import '../repositories/user_repository.dart';
 class PlaceIsNotRecordedException implements Exception {
   const PlaceIsNotRecordedException({this.message});
 
-  final String message;
+  final String? message;
 
   @override
-  String toString() => message ?? this.runtimeType;
+  String toString() => message ?? "$this.runtimeType";
 }
 
 class PlaceDoesNotHaveOwnerException implements Exception {
   const PlaceDoesNotHaveOwnerException({this.message});
 
-  final String message;
+  final String? message;
 
   @override
-  String toString() => message ?? this.runtimeType;
+  String toString() => message ?? "$this.runtimeType";
 }
 
 
@@ -33,19 +31,19 @@ const String _kPlacesCollection = "places";
 class PlaceRepository {
   PlaceRepository._internal()
     : this._placesRef = FirebaseFirestore.instance
-                                         .collection(_kPlacesCollection);
+                            .collection(_kPlacesCollection);
 
   factory PlaceRepository() => _instance;
   static final PlaceRepository _instance = PlaceRepository._internal();
   
   final CollectionReference _placesRef;
 
-
+  // TODO: Check and Write documentation for PlaceRepository.
   ///
   ///
   ///
   Future<Place> getPlaceWith({
-    @required String placeId,
+    required String placeId,
     bool doReturnGuests = false,
     bool doReturnHousehold = false,
     bool doReturnServitors = false,
@@ -55,16 +53,20 @@ class PlaceRepository {
     if (!placeDoc.exists) throw PlaceIsNotRecordedException();
 
     final Set<Guest> guests = (doReturnGuests)?
-        await _getGuests(guestsData: placeDoc.get(kPlaceDocKeyGuests) as List<Map>,)
-          : <Guest>{ /* EMPTY */ };
+        await _getGuests(
+          guestsData: placeDoc.get(kPlaceDocKeyGuests) as List<Map<String, dynamic>>,
+        )
+        : <Guest>{ /* EMPTY */ };
     final Set<Household> household =
         await _getHousehold(
-          householdData: placeDoc.get(kPlaceDocKeyHousehold) as List<Map>,
+          householdData: placeDoc.get(kPlaceDocKeyHousehold) as List<Map<String, dynamic>>,
           doReturnOnlyHouseholder: doReturnHousehold,
         );
     final Set<Servitor> servitors = (doReturnServitors)?
-        await _getServitors(servitorsData: placeDoc.get(kPlaceDocKeyServitors) as List<Map>,)
-          : <Servitor>{ /* EMPTY */ };
+        await _getServitors(
+          servitorsData: placeDoc.get(kPlaceDocKeyServitors) as List<Map<String, dynamic>>,
+        )
+        : <Servitor>{ /* EMPTY */ };
 
     return
       Place.withMembers(
@@ -79,10 +81,10 @@ class PlaceRepository {
   }
 
   Future<Set<Household>> _getHousehold({
-    @required List<Map<String, dynamic>> householdData,
+    required List<Map<String, dynamic>> householdData,
     bool doReturnOnlyHouseholder = false
   }) async {
-    Set<Household> household = <Household>{ /*EMPTY*/ };
+    final Set<Household> household = <Household>{ /*EMPTY*/ };
 
     if (doReturnOnlyHouseholder) {
       final Map<String, dynamic> householder =
@@ -100,8 +102,6 @@ class PlaceRepository {
         Household(
           isHouseholder: true,
           details: await UserRepository().getUserWith(
-              doReturnCurrentPlace: true,
-              doReturnPhotographUrl: true,
               id: householder[kPlaceDocIdMapKeyId] as String,
             ),
           droppedNotes: droppedNotes,
@@ -110,9 +110,7 @@ class PlaceRepository {
     } else {
       for (Map<String, dynamic> data in householdData) {
         final User details = await UserRepository().getUserWith(
-                              doReturnCurrentPlace: true,
                               doReturnPhoneNumber: true,
-                              doReturnPhotographUrl: true,
                               id: data[kPlaceDocIdMapKeyId],
                              );
         final Map<MemberType, String> droppedNotes =
@@ -136,22 +134,20 @@ class PlaceRepository {
   }
 
   Future<Set<Guest>> _getGuests({
-    @required List<Map<String, dynamic>> guestsData,
+    required List<Map<String, dynamic>> guestsData,
   }) async {
     final Set<Guest> guests = <Guest>{ /*EMPTY*/ };
 
     for (Map<String, dynamic> data in guestsData) {
       final User details = await UserRepository().getUserWith(
                             id: data[kPlaceDocIdMapKeyId],
-                            doReturnCurrentPlace: true,
                             doReturnPhoneNumber: true,
-                            doReturnPhotographUrl: true,
                            );
       final List<GuestPermissions> permissions =
           (data[kPlaceDocIdMapKeyPermissions] as List<int>)
             .map<GuestPermissions>(
               (int permIndex) => GuestPermissions.values[permIndex],
-            );
+            ).toList(growable: false,);
 
       guests.add(
         Guest(
@@ -164,22 +160,20 @@ class PlaceRepository {
   }
 
   Future<Set<Servitor>> _getServitors({
-    @required List<Map<String, dynamic>> servitorsData,
+    required List<Map<String, dynamic>> servitorsData,
   }) async {
     final Set<Servitor> servitors = <Servitor>{ /*EMPTY*/ };
 
     for (Map<String, dynamic> data in servitorsData) {
       final User details = await UserRepository().getUserWith(
                             id: data[kPlaceDocIdMapKeyId],
-                            doReturnCurrentPlace: true,
                             doReturnPhoneNumber: true,
-                            doReturnPhotographUrl: true,
                            );
       final List<ServitorPermissions> permissions =
           (data[kPlaceDocIdMapKeyPermissions] as List<int>)
             .map<ServitorPermissions>(
               (int permIndex) => ServitorPermissions.values[permIndex],
-            );
+            ).toList(growable: false,);
 
       servitors.add(
         Servitor(
@@ -194,20 +188,28 @@ class PlaceRepository {
   ///
   ///
   ///
-  Future<List<Place>> getPlacesOf({@required String userId}) { }
+  Future<List<Place>> getPlacesOf({required String userId}) {
+    throw UnimplementedError();
+  }
 
   ///
   ///
   ///
-  Future<void> doesPlaceExists() {} // TODO: This one requires some tinkering.
+  Future<void> doesPlaceExists() {
+    throw UnimplementedError();
+  } // TODO: This one requires some tinkering.
 
   ///
   ///
   ///
-  Future<Place> addPlace(Place place) {} // TODO: Decide the algorithm.
+  Future<Place> addPlace(Place place) {
+    throw UnimplementedError();
+  } // TODO: Decide the algorithm.
 
   ///
   ///
   ///
-  Future<void> deletePlace(String placeId) {} // TODO: Seems straight-forward. Implement.
+  Future<void> deletePlace(String placeId) {
+    throw UnimplementedError();
+  } // TODO: Seems straight-forward. Implement.
 }

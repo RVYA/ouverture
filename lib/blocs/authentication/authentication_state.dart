@@ -4,110 +4,83 @@ part of 'authentication_bloc.dart';
 enum AuthenticationStatus { authenticated, unauthenticated, }
 
 
-abstract class AuthenticationState extends Equatable {
-  const AuthenticationState({
-    @required this.status,
-    @required this.user,
-  });
+abstract class AuthenticationState<D extends Object> extends Equatable {
+  const AuthenticationState({required this.data,});
 
-  final AuthenticationStatus status;
-  final User user;
+  final D? data;
 
   @override
-  List<Object> get props => <Object>[ status, user, ];
+  List<Object?> get props => (data != null)? <D>[data!,] : List<Object>.empty();
 }
 
 
-class AuthenticationInitial extends AuthenticationState {
+class AuthenticationInitial extends AuthenticationState<Object> {
   const AuthenticationInitial()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: null,
-      );
+    : super(data: null,);
 }
 
 
-class AuthenticationSignInFailure extends AuthenticationState {
-  const AuthenticationSignInFailure()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: null,
-      );
+class AuthenticationSignInFailure extends AuthenticationState<Exception> {
+  const AuthenticationSignInFailure({required Exception exception,})
+    : super(data: exception,);
+}
+// TODO: Check AuthSignInInProgress state when other sign-in methods are implemented.
+class AuthenticationSignInInProgress extends AuthenticationState<String> {
+  const AuthenticationSignInInProgress({required String phoneNumber,})
+    : super(data: phoneNumber,);
 }
 
-class AuthenticationSignInInProgress extends AuthenticationState {
-  const AuthenticationSignInInProgress()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: null,
-      );
-}
-
-class AuthenticationSignInSuccessful extends AuthenticationState {
-  const AuthenticationSignInSuccessful({@required User user,})
-    : super(
-        status: AuthenticationStatus.authenticated,
-        user: user,
-      );
+class AuthenticationSignInSuccessful extends AuthenticationState<User> {
+  const AuthenticationSignInSuccessful({required User user,})
+    : super(data: user,);
 }
 
 
-class AuthenticationPhoneNumberVerificationInProgress extends AuthenticationState {
-  const AuthenticationPhoneNumberVerificationInProgress()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: User.unknown,
-      );
+class AuthenticationPhoneNumberVerificationInProgress
+    extends AuthenticationState<String> {
+  const AuthenticationPhoneNumberVerificationInProgress({
+    required String verificationId,
+  })
+    : super(data: verificationId,);
 }
 
-class AuthenticationPhoneNumberVerificationSuccessful extends AuthenticationState {
+class AuthenticationPhoneNumberVerificationSuccessful
+    extends AuthenticationState<Object> {
   const AuthenticationPhoneNumberVerificationSuccessful()
-    : super(
-        status: AuthenticationStatus.authenticated,
-        user: User.unknown,
-      ); 
+    : super(data: null);
 }
 
-class AuthenticationPhoneNumberVerificationFailure extends AuthenticationState {
-  const AuthenticationPhoneNumberVerificationFailure()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: User.unknown,
-      );
+class AuthenticationPhoneNumberVerificationFailure
+    extends AuthenticationState<Exception> {
+  const AuthenticationPhoneNumberVerificationFailure({
+    required Exception exception,
+  })
+    : super(data: exception,);
 }
 
 
-class AuthenticationSignUpFailure extends AuthenticationState {
-  const AuthenticationSignUpFailure()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: null,
-      );
+class AuthenticationSignUpFailure extends AuthenticationState<Exception> {
+  const AuthenticationSignUpFailure({required Exception exception,})
+    : super(data: exception,);
 }
 
-class AuthenticationSignUpInProgress extends AuthenticationState {
-  const AuthenticationSignUpInProgress()
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: null,
-      );
+class AuthenticationSignUpInProgress extends AuthenticationState<String> {
+  const AuthenticationSignUpInProgress({required String phoneNumber,})
+    : super(data: phoneNumber,);
 }
 
-class AuthenticationSignUpSuccessful extends AuthenticationState {
-  const AuthenticationSignUpSuccessful({@required User user,})
-    : super(
-        status: AuthenticationStatus.unauthenticated,
-        user: user,
-      );
+class AuthenticationSignUpSuccessful extends AuthenticationState<User> {
+  const AuthenticationSignUpSuccessful({required User user,})
+    : super(data: user,);
 }
 
 
-class AuthenticationSignOutInProgress extends AuthenticationState {
-  const AuthenticationSignOutInProgress({@required User user,})
-    : super(
-        status: AuthenticationStatus.authenticated,
-        user: user,
-      );
+class AuthenticationSignOutInProgress extends AuthenticationState<Object> {
+  const AuthenticationSignOutInProgress()
+    : super(data: null,);
 }
 
-class AuthenticationSignOutSuccessful extends AuthenticationInitial {}
+class AuthenticationSignOutSuccessful extends AuthenticationState<Object> {
+  const AuthenticationSignOutSuccessful()
+    : super(data: null,);
+}

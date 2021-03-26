@@ -8,10 +8,10 @@ import '../repositories/user_repository.dart';
 class UserCacheDoesNotExistsException implements Exception {
   const UserCacheDoesNotExistsException({this.message});
 
-  final String message;
+  final String? message;
 
   @override
-  String toString() => message ?? this.runtimeType;
+  String toString() => message ?? "${this.runtimeType}";
 }
 
 
@@ -47,14 +47,12 @@ class UserCache {
 
     if (doesCacheExists) {
       final Box<String> cache = await Hive.openBox<String>(_kBoxUserCache);
-      final String cachedUserId = cache.get(_kKeyCachedUserId);
+      final String cachedUserId = cache.get(_kKeyCachedUserId)!;
 
       return
         await UserRepository().getUserWith(
                                 id: cachedUserId,
-                                doReturnCurrentPlace: true,
                                 doReturnPhoneNumber: true,
-                                doReturnPhotographUrl: true,
                               );
     } else {
       throw UserCacheDoesNotExistsException();

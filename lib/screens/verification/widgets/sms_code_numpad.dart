@@ -12,7 +12,7 @@ const int kNumpadRemoveValue = -1;
 
 
 class SmsCodeNumpad extends StatelessWidget {
-  const SmsCodeNumpad({@required this.onPressed});
+  const SmsCodeNumpad({required this.onPressed});
 
   final void Function(int number) onPressed;
 
@@ -40,7 +40,7 @@ class SmsCodeNumpad extends StatelessWidget {
                   _kNumpadColumnCount,
                   (int column) {
                     final int padValue = (row*_kNumpadColumnCount)+(column+1);
-                    // TODO: YAY! - TEST
+
                     return _NumpadButton(
                       onPressed: () => onPressed(padValue),
                       text: "$padValue",
@@ -81,25 +81,25 @@ const EdgeInsets _kPadPadding = const EdgeInsets.all(21.0);
 
 class _NumpadButton extends StatelessWidget {
   const _NumpadButton({
-    Key key,
+    Key? key,
     this.icon,
     this.text,
-    @required this.onPressed,
+    this.onPressed,
   })
     : assert((icon != null) ^ (text != null),),
       this.brightness = (icon == null)? Brightness.light : Brightness.dark,
       super(key: key,);
 
   final Brightness brightness;
-  final Icon icon;
-  final String text;
-  final VoidCallback onPressed;
+  final Icon? icon;
+  final String? text;
+  final VoidCallback? onPressed;
 
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: (text != null)? Text(text) : icon,
+      child: (text != null)? Text(text!) : icon!,
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         padding: _kPadPadding,

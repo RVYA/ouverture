@@ -3,9 +3,9 @@ part of '../phone_input_field.dart';
 
 class CountrySelector extends StatefulWidget {
   const CountrySelector({
-    @required this.initialCountry,
+    required this.initialCountry,
     this.textPadding = const EdgeInsets.all(22.5),
-    @required this.onSelection,
+    required this.onSelection,
   });
 
   final String initialCountry;
@@ -17,7 +17,7 @@ class CountrySelector extends StatefulWidget {
 }
 
 class _CountrySelectorState extends State<CountrySelector> {
-  String country;
+  String country = "";
 
 
   @override

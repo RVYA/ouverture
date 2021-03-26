@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart' show required;
-
 import 'package:equatable/equatable.dart';
 
 
-class Couple<H, T> extends Equatable {
+class Couple<H extends Object, T extends Object> extends Equatable {
   const Couple(this.head, this.tail);
 
   final H head;

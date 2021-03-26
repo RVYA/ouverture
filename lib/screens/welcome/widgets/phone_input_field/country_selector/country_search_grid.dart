@@ -3,8 +3,8 @@ part of '../phone_input_field.dart';
 
 class CountrySearchGrid extends StatefulWidget {
   const CountrySearchGrid({
-    @required this.initialCountry,
-    @required this.onSelection,
+    required this.initialCountry,
+    required this.onSelection,
   });
 
   final String initialCountry;
@@ -14,15 +14,10 @@ class CountrySearchGrid extends StatefulWidget {
   _CountrySearchGridState createState() => _CountrySearchGridState();
 }
 
-class _CountrySearchGridState extends State<CountrySearchGrid> {
-  List<String> filteredCountryCodes;
-  
-  @override
-  void initState() {
-    super.initState();
 
-    this.filteredCountryCodes = List<String>.empty();
-  }
+class _CountrySearchGridState extends State<CountrySearchGrid> {
+  List<String> filteredCountryCodes = List<String>.empty();
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +33,10 @@ class _CountrySearchGridState extends State<CountrySearchGrid> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextField(
               cursorColor: Colors.red,
-              decoration: kGetInputDecorationFor(brightness: Brightness.light),
+              decoration: kGetInputDecorationFor(
+                brightness: Brightness.light,
+                labelText: kWelcomeCountrySelectorInputFieldLabel,
+              ),
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.allow(RegExp(r"[a-z]", unicode: true)),
                 LengthLimitingTextInputFormatter(15),

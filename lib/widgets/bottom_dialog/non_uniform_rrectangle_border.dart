@@ -10,7 +10,7 @@ const Radius
 
 class NonUniformRRectangleBorder extends BoxBorder {
   const NonUniformRRectangleBorder({
-    @required this.width,
+    required this.width,
     this.color = Colors.transparent,
     this.hasTop = true,
     this.hasLeft = true,
@@ -44,7 +44,7 @@ class NonUniformRRectangleBorder extends BoxBorder {
       => (hasTop)? BorderSide(color: color, width: width) : BorderSide.none;
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
     return Path()
         ..addRRect(
             radii.resolve(textDirection)
@@ -59,14 +59,14 @@ class NonUniformRRectangleBorder extends BoxBorder {
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     return Path()
       ..addRRect(radii.resolve(textDirection).toRRect(rect));
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection,
-      BoxShape shape = BoxShape.rectangle, BorderRadius borderRadius
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection,
+      BoxShape shape = BoxShape.rectangle, BorderRadius? borderRadius
   }) {
     if ((width <= 0) || color.isTransparent) return;
 

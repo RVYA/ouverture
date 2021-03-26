@@ -12,7 +12,7 @@ const Radius
 
 InputDecoration kGetInputDecorationFor({
   Brightness brightness = Brightness.light,
-  @required String labelText,
+  required String labelText,
 }) {
   final OutlinedGradientInputBorder
       fadingBorder = OutlinedGradientInputBorder(
@@ -25,7 +25,7 @@ InputDecoration kGetInputDecorationFor({
   final TextStyle
       inputStyle = kGetBodyStyleFor(brightness: brightness),
       labelStyle = inputStyle.copyWith(
-                    color: inputStyle.color.withOpacity(0.6),
+                    color: inputStyle.color!.withOpacity(0.6),
                    );
 
 
@@ -44,12 +44,12 @@ BoxDecoration kGetBoxDecorationFor({
   BoxShape shape = BoxShape.rectangle,
   bool isFilled = true,
 }) {
-  final BorderRadiusGeometry borderRadius = (shape == BoxShape.rectangle)?
+  final BorderRadiusGeometry? borderRadius = (shape == BoxShape.rectangle)?
       const BorderRadius.all(kMaterialLargeComponentRadii)
       : null;
 
-  BoxBorder border;
-  Color color;
+  BoxBorder? border;
+  Color? color;
   if (isFilled) {
     border = null;
     color = (brightness == Brightness.light)? kPrimary : kBackground;

@@ -8,8 +8,8 @@ const EdgeInsets _kScreenHorizontalMargin = EdgeInsets.symmetric(
 
 class ScreenHorizontalPadding extends StatelessWidget {
   const ScreenHorizontalPadding({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   })
     : super(key: key);
 

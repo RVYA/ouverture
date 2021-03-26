@@ -10,10 +10,10 @@ const String _kNotiHiDefaultMessage = "Hey! (^o^)/";
 
 class NotiHi extends OuvertureModel {
   const NotiHi({
-    @required String id,
+    required String id,
     this.message = _kNotiHiDefaultMessage,
-    @required this.recipientId,
-    @required this.senderId,
+    required this.recipientId,
+    required this.senderId,
   })
     : super(id: id,);
 
@@ -28,10 +28,10 @@ class NotiHi extends OuvertureModel {
 
   @override
   NotiHi copyWith({
-    String id,
-    String message,
-    String recipientId,
-    String senderId,
+    String? id,
+    String? message,
+    String? recipientId,
+    String? senderId,
     //String soundFile, TODO: Useless.
   }) {
     return

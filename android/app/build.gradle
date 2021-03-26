@@ -61,4 +61,6 @@ dependencies {  // Added to use Firebase services.
 
     // Authentication service - BOM defines packages version.
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
 }

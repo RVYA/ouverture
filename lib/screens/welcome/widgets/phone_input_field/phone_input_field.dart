@@ -28,29 +28,29 @@ const EdgeInsetsGeometry _kHorizontalOffset = const EdgeInsets.symmetric(horizon
 final TextStyle
   _kSignInScreenTextStyle = kGetBodyStyleFor(brightness: Brightness.dark),
   _kCountryDialCodeStyle = _kSignInScreenTextStyle
-                            .copyWith(color: _kSignInScreenTextStyle.color.withOpacity(0.7),);
+                            .copyWith(color: _kSignInScreenTextStyle.color!.withOpacity(0.7),);
 
 const Duration _kPhoneInputFieldTransitionDuration = const Duration(milliseconds: 1500);
 
 
 class PhoneInputField extends StatefulWidget {
   const PhoneInputField({
-    @required this.controller,
+    required this.controller,
     this.onInputFieldEnabled,
     this.onInputValidation,
   });
 
   final TextEditingController controller;
-  final void Function() onInputFieldEnabled;
-  final void Function(bool) onInputValidation;
+  final void Function()? onInputFieldEnabled;
+  final void Function(bool)? onInputValidation;
 
   @override
   _PhoneInputFieldState createState() => _PhoneInputFieldState();
 }
 
 class _PhoneInputFieldState extends State<PhoneInputField> {
-  String countryCode;
-  bool isButtonPressed;
+  String? countryCode;
+  bool isButtonPressed = false;
 
   final FocusNode inputFieldFocusNode = FocusNode(canRequestFocus: true);
 
@@ -60,7 +60,6 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
     super.initState();
 
     this.countryCode = CountryCodes.deviceLocale.countryCode;
-    this.isButtonPressed = false;
   }
 
   @override
@@ -79,7 +78,7 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
               onPressed: () {
                 setState(() => isButtonPressed = true);
                 FocusScope.of(context).requestFocus(inputFieldFocusNode);
-                if (widget.onInputFieldEnabled != null) widget.onInputFieldEnabled();
+                if (widget.onInputFieldEnabled != null) widget.onInputFieldEnabled!();
               },
             ),
           )
@@ -99,24 +98,27 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
               child: TextField(
                 cursorColor: kBackground,
                 controller: widget.controller,
-                decoration: kGetInputDecorationFor(brightness: Brightness.dark)
-                              .copyWith(  // TODO: Decide on height of the button and input field.
-                                contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
-                                prefix: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    CountrySelector(
-                                      textPadding: EdgeInsets.zero,
-                                      initialCountry: CountryCodes.deviceLocale.countryCode,
-                                      onSelection: (String selection) => setState(() => this.countryCode =  selection),
-                                    ),
-                                    Text(CountryCodes.getDialCodeOf(countryCode: countryCode)),
-                                  ]
-                                ),
-                                prefixStyle: _kCountryDialCodeStyle,
-                              ),
+                decoration: kGetInputDecorationFor(
+                    brightness: Brightness.dark,
+                    labelText: kWelcomeCallToActionInputFieldLabel,
+                  )
+                    .copyWith(  // TODO: Decide on height of the button and input field.
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
+                      prefix: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          CountrySelector(
+                            textPadding: EdgeInsets.zero,
+                            initialCountry: CountryCodes.deviceLocale.countryCode!,
+                            onSelection: (String selection) => setState(() => this.countryCode =  selection),
+                          ),
+                          Text(CountryCodes.getDialCodeOf(countryCode: countryCode)),
+                        ]
+                      ),
+                      prefixStyle: _kCountryDialCodeStyle,
+                    ),
                 enableInteractiveSelection: false,
                 focusNode: inputFieldFocusNode,
                 inputFormatters: <TextInputFormatter>[
@@ -126,7 +128,7 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
                 keyboardType: TextInputType.number,
                 onChanged: (String input) {
                   if (widget.onInputValidation != null) {
-                    widget.onInputValidation(
+                    widget.onInputValidation!(
                       (input.length >= _kPhoneNumberMinDigitLength)
                       && (input.length <= _kPhoneNumberMaxDigitLength)
                     );

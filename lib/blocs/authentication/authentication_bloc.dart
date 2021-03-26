@@ -1,11 +1,14 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart' show required;
+import 'dart:io' as io;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException, PhoneAuthCredential, UserCredential;
+import 'package:firebase_auth/firebase_auth.dart'
+    show FirebaseAuthException, PhoneAuthCredential, UserCredential;
+import 'package:ouverture/screens/introduction/introduction.dart';
 
 import '../../data/user_cache.dart';
+import '../../models/place.dart';
 import '../../models/user.dart';
 import '../../repositories/authentication_repository.dart';
 import '../../repositories/user_repository.dart';
@@ -15,22 +18,28 @@ part 'authentication_state.dart';
 part 'authentication_event.dart';
 
 
+enum PhoneNumberVerificationRequirement {
+  verificationId, smsCode,
+}
+
+const PhoneNumberVerificationRequirement
+  _kReqVerificationId = PhoneNumberVerificationRequirement.verificationId,
+  _kReqSmsCode = PhoneNumberVerificationRequirement.smsCode;
+
+
 const Duration kAuthenticationTimeoutDuration = const Duration(minutes: 1);
 
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc({
-    @required this.authRepository,
-    @required this.userCache,
-    @required this.userRepository,
-  })
-    : super(AuthenticationInitial());
+  AuthenticationBloc()
+    : this.authRepository = AuthenticationRepository(),
+      this.userCache = UserCache(),
+      this.userRepository = UserRepository(),
+      super(AuthenticationInitial());
 
   final AuthenticationRepository authRepository;
   final UserCache userCache;
   final UserRepository userRepository;
-
-  String _verificationId = kUnknown;
 
 
   @override
@@ -41,7 +50,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           this.add(
             AuthenticationEvent(
               type: AuthenticationEventType.userReturned,
-              data: authRepository.currentUser.phoneNumber,
+              data: authRepository.currentUser!.phoneNumber!,
             ),
           );
         } else {
@@ -50,13 +59,15 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       } break;
 
       case AuthenticationEventType.signInRequested: {
-        yield AuthenticationSignInInProgress();
+        yield AuthenticationSignInInProgress(phoneNumber: event.data! as String,);
+
+        String? _verificationId;
 
         // TODO: Implement empty callback related to automatic SMS code resolution.
         await authRepository.verifyPhoneNumber(
             event.data,
             onCodeAutoRetrievalTimeout: (_) {}, // Only be called on Android devices which support automatic SMS code resolution
-            onCodeSent: (String verificationId, int resendToken) {
+            onCodeSent: (String verificationId, int? resendToken) {
               _verificationId = verificationId;
             },
             onVerificationCompleted: (_) {}, // Only be called on Android devices which support automatic SMS code resolution
@@ -66,27 +77,48 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
             timeoutDuration: kAuthenticationTimeoutDuration,
           );
 
-        yield AuthenticationPhoneNumberVerificationInProgress();
+        yield AuthenticationPhoneNumberVerificationInProgress(
+            verificationId: _verificationId!
+          );
       } break;
 
       case AuthenticationEventType.smsCodeEntered: {
+        final Map<PhoneNumberVerificationRequirement, String>
+          requirements = event.data!
+              as Map<PhoneNumberVerificationRequirement, String>;
+
         final PhoneAuthCredential phoneAuthCredential =
             authRepository.generatePhoneAuthCredential(
-              smsCode: event.data,
-              verificationId: _verificationId,
+              smsCode: requirements[_kReqSmsCode]!,
+              verificationId: requirements[_kReqVerificationId]!,
             );
-        final UserCredential userCredential =
+        
+        UserCredential userCredential;
+        try {
+          userCredential =
             await authRepository.signIn(authCredential: phoneAuthCredential);
+        } catch (e) {
+          yield AuthenticationSignInFailure(exception: e as Exception,);
+          return;
+        }
         
         // TODO: Remove after testing.
-        print("UID: ${userCredential.user.uid}, Phone Number: ${userCredential.user.phoneNumber}");
-        print("Token: ${userCredential.credential.token}");
+        print("UID: ${userCredential.user!.uid}, Phone Number: ${userCredential.user!.phoneNumber}");
+        print("Token: ${userCredential.credential!.token}");
 
-        // TODO: Continue implementing Sign-In flow.
+        User signedUser = User.unknown;
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          signedUser = userRepository.signedUser;
+        } else {
+          signedUser =
+              await userRepository.getUserWith(id: userCredential.user!.uid);
+        }
+        
+        yield AuthenticationSignInSuccessful(user: signedUser);
       } break;
 
       case AuthenticationEventType.signOutRequested: {
-        yield AuthenticationSignOutInProgress(user: userRepository.signedUser);
+        yield AuthenticationSignOutInProgress();
 
         await authRepository.signOut();
         await userCache.wipeUserCache();
@@ -96,12 +128,25 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       } break;
 
       case AuthenticationEventType.signUpRequested: {
-        // TODO: Handle this case.
+        yield AuthenticationSignUpInProgress(
+            phoneNumber: event.data! as String,
+          );
+      } break;
+
+      case AuthenticationEventType.signUpDataSupplied: {
+        final User recordedUser =
+            await userRepository.addUser(event.data! as User,);
+
+        userRepository.signedUser = recordedUser;
+
+        yield AuthenticationSignUpSuccessful(user: recordedUser);
+
+        this.add(
+          AuthenticationSignInRequested(phoneNumber: recordedUser.phoneNumber,),
+        );
       } break;
 
       case AuthenticationEventType.userReturned: {
-        yield AuthenticationSignInInProgress();
-
         final User cachedUser = await userCache.recoverUser();
         userRepository.signedUser = cachedUser;
 

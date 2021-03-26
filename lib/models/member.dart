@@ -14,8 +14,8 @@ extension DescribeMemberType on MemberType {
 
 abstract class Member extends Equatable {
   const Member({
-    @required this.type,
-    @required this.details,
+    required this.type,
+    required this.details,
   });
 
   final MemberType type;
@@ -30,9 +30,9 @@ abstract class Member extends Equatable {
 
 class Household extends Member {
   const Household({
-    @required User details,
-    Map<MemberType, String> droppedNotes,
-    @required this.isHouseholder,
+    required User details,
+    Map<MemberType, String>? droppedNotes,
+    required this.isHouseholder,
   })
     : this.droppedNotes = droppedNotes ?? const <MemberType, String>{
                                             MemberType.guest: "",
@@ -54,9 +54,9 @@ class Household extends Member {
 
 abstract class NonHousehold<T> extends Member {
   const NonHousehold({
-    @required User details,
-    @required this.permissions,
-    @required MemberType type,
+    required User details,
+    required this.permissions,
+    required MemberType type,
   })
     : super(
         details: details,
@@ -83,8 +83,8 @@ enum GuestPermissions {
 // TODO: Implement NotiHI
 class Guest extends NonHousehold<GuestPermissions> {
   const Guest({
-    @required User details,
-    @required List<GuestPermissions> permissions,
+    required User details,
+    required List<GuestPermissions> permissions,
   })
     : super(
         details: details,
@@ -95,7 +95,7 @@ class Guest extends NonHousehold<GuestPermissions> {
   @override
   List<int> permissionsAsIndices() {
     return
-      permissions.map<int>( (GuestPermissions perm) => perm.index );
+      permissions.map<int>( (GuestPermissions perm) => perm.index ).toList();
   }
 }
 
@@ -106,8 +106,8 @@ enum ServitorPermissions {
 
 class Servitor extends NonHousehold<ServitorPermissions> {
   const Servitor({
-    @required User details,
-    @required List<ServitorPermissions> permissions,
+    required User details,
+    required List<ServitorPermissions> permissions,
   })
     : super(
         details: details,
@@ -118,6 +118,6 @@ class Servitor extends NonHousehold<ServitorPermissions> {
   @override
   List<int> permissionsAsIndices() {
     return
-      permissions.map<int>( (ServitorPermissions perm) => perm.index );
+      permissions.map<int>( (ServitorPermissions perm) => perm.index ).toList();
   }
 }

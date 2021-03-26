@@ -18,8 +18,8 @@ const String     // Each *Ids has it's own array. Each element is an map.
 
 class Place extends OuvertureModel {
   const Place({
-    @required String id,
-    @required this.name,
+    required String id,
+    required this.name,
   })
     : this.members = const <MemberType, Set<Member>>{
                             MemberType.guest    : <Guest>{ },
@@ -29,11 +29,13 @@ class Place extends OuvertureModel {
       super(id: id,);
 
   const Place.withMembers({
-    @required String id,
-    @required this.name,
-    @required this.members,
+    required String id,
+    required this.name,
+    required this.members,
   })
     : super(id: id,);
+
+  static const Place unknown = const Place(id: kUnknown, name: kUnknown);
 
   final String name;
   final Map<MemberType, Set<Member>> members;
@@ -43,23 +45,23 @@ class Place extends OuvertureModel {
 
   Household get householder {
     return
-      members[MemberType.household]
+      (members[MemberType.household] as Set<Household>)
         .singleWhere(
           (Member member) => (member as Household).isHouseholder,
          );
   }
 
 
-  List<Member> getMembersOfType(MemberType type) => members[type].toList(growable: false);
+  List<Member> getMembersOfType(MemberType type) => members[type]!.toList(growable: false);
 
-  bool addMember(Member newMember) => members[newMember.type].add(newMember);
-  bool removeMember(Member member) => members[member.type].remove(member);
+  bool addMember(Member newMember) => members[newMember.type]!.add(newMember);
+  bool removeMember(Member member) => members[member.type]!.remove(member);
 
   @override
   Place copyWith({
-    String id,
-    String name,
-    Map<MemberType, Set<Member>> members,
+    String? id,
+    String? name,
+    Map<MemberType, Set<Member>>? members,
   }) {
     return
       Place.withMembers(
@@ -71,8 +73,7 @@ class Place extends OuvertureModel {
 
   @override
   Map<String, dynamic> toDocument() {
-    final List<Map>
-      guestIds =
+    final List<Map> guestIds =
         (members[MemberType.guest] as List<Guest>)
           .map<Map>(
             (Guest member)
@@ -80,7 +81,7 @@ class Place extends OuvertureModel {
                   kPlaceDocIdMapKeyId: member.id,
                   kPlaceDocIdMapKeyPermissions: member.permissionsAsIndices(),
                  },
-           ),
+           ).toList(),
       householdIds =
         (members[MemberType.household] as List<Household>)
           .map<Map>(
@@ -91,10 +92,10 @@ class Place extends OuvertureModel {
                   kPlaceDocIdMapKeyDroppedNotes: Map<String, String>.fromIterable(
                       member.droppedNotes.entries,
                       key: (entry) => entry.key.value,
-                      value: (entry) => member.droppedNotes[entry.key],
+                      value: (entry) => member.droppedNotes[entry.key] ?? kUnknown,
                     ),
                  },
-           ),
+           ).toList(),
       servitorIds =
         (members[MemberType.servitor] as List<Servitor>)
           .map<Map>(
@@ -103,7 +104,7 @@ class Place extends OuvertureModel {
                   kPlaceDocIdMapKeyId: member.id,
                   kPlaceDocIdMapKeyPermissions: member.permissionsAsIndices(),
                  },
-           );
+           ).toList();
 
     return
       <String, dynamic>{

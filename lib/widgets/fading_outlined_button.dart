@@ -8,9 +8,9 @@ import 'custom_borders/outlined_gradient_border.dart';
 
 class FadingOutlinedButton extends StatelessWidget {
   const FadingOutlinedButton({
-    Key key,
+    Key? key,
     this.brightness = Brightness.light,
-    @required this.onPressed,
+    this.onPressed,
     this.icon,
     this.text,
     this.isHorizontallyExpanded = true,
@@ -20,9 +20,9 @@ class FadingOutlinedButton extends StatelessWidget {
       super(key: key);
 
   final Brightness brightness;
-  final VoidCallback onPressed;
-  final Icon icon;
-  final String text;
+  final VoidCallback? onPressed;
+  final Icon? icon;
+  final String? text;
   final bool isHorizontallyExpanded;
   final bool isTextBold;
 
@@ -36,7 +36,7 @@ class FadingOutlinedButton extends StatelessWidget {
 
     return OutlinedButton(
       child: SizedBox(
-        child: (text != null)? Text(text, textAlign: TextAlign.center,) : icon,
+        child: (text != null)? Text(text!, textAlign: TextAlign.center,) : icon,
         width: (isHorizontallyExpanded)? double.maxFinite : null,
       ),
       onPressed: onPressed,

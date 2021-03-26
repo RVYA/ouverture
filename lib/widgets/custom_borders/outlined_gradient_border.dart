@@ -9,14 +9,10 @@ import '../../values/decorations.dart' show kMaterialSmallComponentRadii;
 
 class OutlinedGradientBorder extends OutlinedBorder {
   const OutlinedGradientBorder({
-    @required this.gradient,
+    required this.gradient,
     this.radii = BorderRadius.zero,
     this.width = 1.0,
-  })
-    : assert(gradient != null),
-      assert(radii != null),
-      assert(width != null)
-      ;
+  });
 
   final Gradient gradient;
   final BorderRadius radii;
@@ -28,10 +24,10 @@ class OutlinedGradientBorder extends OutlinedBorder {
 
   @override
   OutlinedGradientBorder copyWith({
-    Gradient gradient,
-    BorderRadius radii,
-    BorderSide side,
-    double width,
+    Gradient? gradient,
+    BorderRadius? radii,
+    BorderSide? side,
+    double? width,
   }) {
     return OutlinedGradientBorder(
       gradient: gradient ?? this.gradient,
@@ -41,7 +37,7 @@ class OutlinedGradientBorder extends OutlinedBorder {
   }
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
     return Path()
             ..addRRect(
                 radii.resolve(textDirection)
@@ -50,13 +46,13 @@ class OutlinedGradientBorder extends OutlinedBorder {
   }
   
   @override
-  Path getOuterPath(Rect rect, { TextDirection textDirection }) {
+  Path getOuterPath(Rect rect, { TextDirection? textDirection }) {
     return Path()
             ..addRRect(radii.resolve(textDirection).toRRect(rect));
   }
   
   @override
-  void paint(Canvas canvas, Rect rect, { TextDirection textDirection }) {
+  void paint(Canvas canvas, Rect rect, { TextDirection? textDirection }) {
     if (width == 0) return;
 
     final RRect outer = radii.resolve(textDirection).toRRect(rect);
@@ -107,14 +103,11 @@ class OutlinedGradientBorder extends OutlinedBorder {
 class OutlinedGradientInputBorder extends InputBorder {
   const OutlinedGradientInputBorder({
     this.gapPadding = 4.0,
-    @required this.gradient,
+    required this.gradient,
     this.radii = const BorderRadius.all(kMaterialSmallComponentRadii),
     this.width = 1.0,
   })
-    : assert(gradient != null),
-      assert(radii != null),
-      assert(width != null),
-      assert((gapPadding != null) && gapPadding >= 0.0),
+    : assert(gapPadding >= 0.0),
       super(borderSide: BorderSide.none); // I am not sure if this has side effects.
 
   final double gapPadding;
@@ -131,11 +124,11 @@ class OutlinedGradientInputBorder extends InputBorder {
 
   @override
   OutlinedGradientInputBorder copyWith({
-    BorderSide borderSide,
-    double gapPadding,
-    Gradient gradient,
-    double radii,
-    double width,
+    BorderSide? borderSide,
+    double? gapPadding,
+    Gradient? gradient,
+    BorderRadius? radii,
+    double? width,
   }) {
     return OutlinedGradientInputBorder(
       gapPadding: gapPadding ?? this.gapPadding,
@@ -146,7 +139,7 @@ class OutlinedGradientInputBorder extends InputBorder {
   }
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
     return Path()
             ..addRRect(
                 radii.resolve(textDirection)
@@ -155,7 +148,7 @@ class OutlinedGradientInputBorder extends InputBorder {
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     return Path()
             ..addRRect(radii.resolve(textDirection).toRRect(rect));
   }
@@ -163,10 +156,9 @@ class OutlinedGradientInputBorder extends InputBorder {
   @override
   void paint(
     Canvas canvas, Rect rect, {
-    double gapStart, double gapExtent = 0.0, double gapPercentage = 0.0,
-    TextDirection textDirection
+    double? gapStart, double gapExtent = 0.0, double gapPercentage = 0.0,
+    TextDirection? textDirection
   }) {
-    assert(gapExtent != null);
     assert((gapPercentage >= 0.0) && (gapPercentage <= 1.0));
     assert(_cornersAreCircular(radii));
 
@@ -182,17 +174,19 @@ class OutlinedGradientInputBorder extends InputBorder {
     if (gapStart == null || gapExtent <= 0.0 || gapPercentage == 0.0) {
       canvas.drawRRect(center, paint);
     } else {
-      final double extent = ui.lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage);
+      final double extent = ui.lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage)!;
       
       switch (textDirection) {
         case TextDirection.rtl:
           final Path path = _gapBorderPath(canvas, center, math.max(0.0, gapStart + gapPadding - extent), extent);
           canvas.drawPath(path, paint);
           break;
-
         case TextDirection.ltr:
           final Path path = _gapBorderPath(canvas, center, math.max(0.0, gapStart - gapPadding), extent);
           canvas.drawPath(path, paint);
+          break;
+        default:
+          // I am not sure if it is required to support this clause.
           break;
       }
     }

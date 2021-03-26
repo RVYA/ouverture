@@ -12,8 +12,8 @@ const int
 
 class SmsCodeField extends StatefulWidget {
   const SmsCodeField({
-    @required this.controller,
-    @required this.onChanged,
+    required this.controller,
+    required this.onChanged,
   });
 
   final SmsCodeFieldController controller;

@@ -1,12 +1,10 @@
-import 'package:flutter/foundation.dart' show required;
-
 import 'package:equatable/equatable.dart';
 
 
 class Geofence extends Equatable {
   const Geofence({
-    @required this.center,
-    @required this.radius,
+    required this.center,
+    required this.radius,
   })
     : assert(
         radius >= 50 && radius <= 250,

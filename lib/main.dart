@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'package:country_codes/country_codes.dart';
 
-import 'values/routes.dart';
 import 'screens/introduction/introduction.dart';
 
 
@@ -33,8 +32,6 @@ class MyApp extends StatelessWidget {
         splashFactory: InkRipple.splashFactory,
       ),
       home: Introduction(),
-      /*initialRoute: kWelcomeRoute,
-      routes: kRoutesMap,*/
     );
   }
 }

@@ -10,8 +10,8 @@ enum FiniteStateButtonCommand { next, previous, }
 class FiniteStateButtonController extends ChangeNotifier {
   FiniteStateButtonController();
 
-  FiniteStateButtonCommand _command;
-  FiniteStateButtonCommand get command => _command;
+  FiniteStateButtonCommand? _command;
+  FiniteStateButtonCommand? get command => _command;
 
 
   void nextState() {
@@ -28,18 +28,18 @@ class FiniteStateButtonController extends ChangeNotifier {
 
 class ButtonState extends Equatable {
   const ButtonState({
-    @required this.value,
+    required this.value,
     this.isLabelBold = false,
     this.onPressed,
   });
 
   final String value;
   final bool isLabelBold;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   bool get isInteractable => (onPressed != null);
 
   @override
-  List<Object> get props => <Object>[value, onPressed];
+  List<Object> get props => <Object>[ value, ];
 }
 
 
@@ -48,10 +48,9 @@ const Duration _kStateChangeTransitionDuration = const Duration(milliseconds: 75
 class FiniteStateButton extends StatefulWidget {
   const FiniteStateButton({
     this.brightness = Brightness.light,
-    @required this.controller,
-    @required this.states,
-  })
-    : assert(controller != null);
+    required this.controller,
+    required this.states,
+  });
 
   final Brightness brightness;
   final FiniteStateButtonController controller;
@@ -62,7 +61,7 @@ class FiniteStateButton extends StatefulWidget {
 }
 
 class _FiniteStateButtonState extends State<FiniteStateButton> {
-  int stateIndex;
+  int stateIndex = 0;
   
   @override
   void initState() {
@@ -72,7 +71,7 @@ class _FiniteStateButtonState extends State<FiniteStateButton> {
 
     widget.controller.addListener(
       () {
-        switch (widget.controller.command) {
+        switch (widget.controller.command!) {
           case FiniteStateButtonCommand.next:
             if (stateIndex < widget.states.length - 1) {
               setState(() => stateIndex++);
@@ -85,9 +84,7 @@ class _FiniteStateButtonState extends State<FiniteStateButton> {
             break;
         }
       }
-    );    
-
-    stateIndex = 0;
+    );
   }
 
   @override

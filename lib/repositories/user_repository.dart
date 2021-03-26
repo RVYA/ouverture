@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ouverture/models/place.dart';
+import 'package:ouverture/repositories/photograph_repository.dart';
 
+import '../models/ouverture_model.dart' show kUnknown;
 import '../models/user.dart';
 import 'phone_number_repository.dart';
 import 'place_repository.dart';
@@ -38,11 +39,11 @@ class UserRepository {
   /// in database, an _UserIsNotRegisteredException_ will be raised.
   ///
   Future<User> getUserWith({
-    String id,
-    String phoneNumber,
+    String? id,
+    String? phoneNumber,
     bool doReturnPhoneNumber = false,
-    bool doReturnCurrentPlace = false,
-    bool doReturnPhotographUrl = true,
+    /*bool doReturnCurrentPlace = false,
+    bool doReturnPhotographUrl = true,*/
   }) async {
     assert(
       (id != null) || (phoneNumber != null),
@@ -50,7 +51,7 @@ class UserRepository {
     );
 
     if (phoneNumber != null) {
-      doReturnPhoneNumber = doReturnCurrentPlace = doReturnPhotographUrl = true;
+      doReturnPhoneNumber = true;
 
       final bool doesPhoneNumberExists =
         await PhoneNumberRepository().doesPhoneNumberExists(
@@ -83,17 +84,16 @@ class UserRepository {
 
       return
         User(
-          id           : userDoc.id,
-          forename     : userDoc.get(kUserDocKeyForename),
-          surname      : userDoc.get(kUserDocKeySurname),
-          phoneNumber  : phoneNumber,
-          photographUrl: (doReturnPhotographUrl)?
-                            userDoc.get(kUserDocKeyPhotoUrl) : kUnknown,
-          currentPlace : (doReturnCurrentPlace)?
-                            await PlaceRepository().getPlaceWith(
-                              placeId: userDoc.get(kUserDocKeyCurrentPlaceId)
-                            )
-                            : null,
+          id          : userDoc.id,
+          forename    : userDoc.get(kUserDocKeyForename),
+          surname     : userDoc.get(kUserDocKeySurname),
+          phoneNumber : phoneNumber,
+          photograph  : await PhotographRepository().downloadPhotograph(
+                userId: userDoc.id,
+              ),
+          currentPlace: await PlaceRepository().getPlaceWith(
+                placeId: userDoc.get(kUserDocKeyCurrentPlaceId)
+              ),
         );
     }
   }
@@ -107,10 +107,12 @@ class UserRepository {
   /// stored User.
   ///
   Future<User> addUser(User user) async {
-    final DocumentReference
-        recordedDocRef = await _usersRef.add(user.toDocument());
-    return
-      user.copyWith(id: recordedDocRef.id);
+    assert(user.currentPlace.id != kUnknown);
+
+    final DocumentReference recUser =
+        await _usersRef.add(user.toDocument());
+
+    return user.copyWith(id: recUser.id);
   }
 
   ///

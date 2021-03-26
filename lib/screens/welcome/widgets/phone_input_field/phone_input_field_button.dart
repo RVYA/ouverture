@@ -4,7 +4,7 @@ part of "phone_input_field.dart";
 class PhoneInputFieldButton extends StatelessWidget {
   PhoneInputFieldButton({
     this.iconPadding = const EdgeInsets.all(22.5),
-    @required this.onPressed,
+    required this.onPressed,
   });
 
   final EdgeInsetsGeometry iconPadding;

@@ -7,21 +7,21 @@ import '../values/text_styles.dart';
 
 class FadingElevatedButton extends StatelessWidget {
   const FadingElevatedButton({
-    Key key,
+    Key? key,
     this.brightness = Brightness.light,
-    @required this.onPressed,
     this.icon,
     this.text,
     this.isHorizontallyExpanded = true,
     this.isTextBold = false,
+    required this.onPressed,
   })
     : assert((icon != null) ^ (text != null)),
       super(key: key);
 
   final Brightness brightness;
   final VoidCallback onPressed;
-  final Icon icon;
-  final String text;
+  final Icon? icon;
+  final String? text;
   final bool isHorizontallyExpanded;
   final bool isTextBold;
   
@@ -41,7 +41,7 @@ class FadingElevatedButton extends StatelessWidget {
       ),
       child: TextButton(
         child: SizedBox(
-          child: (text != null)? Text(text, textAlign: TextAlign.center) : icon,
+          child: (text != null)? Text(text!, textAlign: TextAlign.center) : icon,
           width: (isHorizontallyExpanded)? double.maxFinite : null,
         ),
         onPressed: onPressed,

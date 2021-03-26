@@ -17,7 +17,7 @@ class Verification extends StatefulWidget {
 class _VerificationState extends State<Verification> {
   final SmsCodeFieldController controller = SmsCodeFieldController();
 
-  String smsCodeInput;
+  String? smsCodeInput;
 // TODO: Implement verification. Integrate with Welcome screen. Add Sign Up Screen. Thank you future me. /tableflip
 // TODO: Use User's name to greet them.
   @override
